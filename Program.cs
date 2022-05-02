@@ -34,7 +34,7 @@ namespace RBFindExcelTool
                 }
             }
         C: Console.WriteLine(tips);
-        A: Console.WriteLine("请输入需要查找的 Excel 所在根目录");
+        A: Console.WriteLine("输入需要查找的 Excel 所在根目录");
 
             _ExcelRootPath = Console.ReadLine();
             if (_ExcelRootPath.Contains("\n") || string.IsNullOrEmpty(_ExcelRootPath) || _ExcelRootPath.Contains(" ") || _ExcelRootPath.Contains("\r") ||
@@ -80,6 +80,8 @@ namespace RBFindExcelTool
             Manager.Exprot(_ExcelRootPath, _SheetName);
             Console.WriteLine("结束查找Excel");
 
+            Console.WriteLine("按任意键清屏并继续");
+            Console.ReadKey();
             Console.Clear();
             Console.WriteLine("如需继续查找 请按 回车键 退出请安 ESC 键");
             while (true)
