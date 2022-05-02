@@ -111,7 +111,7 @@ namespace RBExcelTool.Lib
                     }
                     else if (cki.Key == ConsoleKey.Escape)
                     {
-                        return;
+                        break;
                     }
                     else
                     {
