@@ -11,7 +11,7 @@ namespace RBFindExcelTool
         {
             string _ExcelRootPath = null;
             string jsonPath = System.IO.Directory.GetCurrentDirectory();
-            jsonPath = jsonPath + "ExcelRootPath.txt";
+            jsonPath = jsonPath + @"\ExcelRootPath.txt";
             string tips = "首次运行需要指定 Excel 所在根目录";
             if (File.Exists(jsonPath))
             {
@@ -36,7 +36,8 @@ namespace RBFindExcelTool
         A: Console.WriteLine("请输入需要查找的 Excel 所在根目录");
 
             _ExcelRootPath = Console.ReadLine();
-            if (_ExcelRootPath == "" || _ExcelRootPath == " " || _ExcelRootPath == "\r")
+            if (_ExcelRootPath.Contains("\n") || string.IsNullOrEmpty(_ExcelRootPath) || _ExcelRootPath.Contains(" ") || _ExcelRootPath.Contains("\r") ||
+                _ExcelRootPath.Contains("\r\n"))
             {
                 Console.WriteLine("输入路径非法 请重新输入");
                 goto A;
@@ -48,9 +49,15 @@ namespace RBFindExcelTool
 
         B: Console.WriteLine("需要查找的 Excel 所在根目录 = 【{0}】", _ExcelRootPath);
 
-            Console.WriteLine("请输入需要查找的 SheetName");
+        D: Console.WriteLine("请输入需要查找的 SheetName");
             string _SheetName = Console.ReadLine();
             Console.WriteLine("需要查找的 SheetName = 【{0}】", _SheetName);
+            if (_SheetName.Contains("\n") || string.IsNullOrEmpty(_SheetName)|| _SheetName.Contains(" ")|| _SheetName.Contains("\r")||
+                _SheetName.Contains("\r\n"))
+            {
+                Console.WriteLine("输入 SheetName 非法 请重新输入");
+                goto D;
+            }
 
             Console.WriteLine("开始查找Excel");
             Manager.Exprot(_ExcelRootPath, _SheetName);

@@ -236,7 +236,7 @@ namespace RBExcelTool.Lib
         }
         void ResdJson()
         {
-            string jsonPath = mExcelPath + "Excel.json";
+            string jsonPath = mExcelPath + @"\Excel.json";
             if (File.Exists(jsonPath))
             {
                 using (StreamReader file = File.OpenText(jsonPath))
@@ -254,7 +254,7 @@ namespace RBExcelTool.Lib
         {
             byte[] info = new UTF8Encoding(true).GetBytes(mExcelPath);
             string jsonPath = System.IO.Directory.GetCurrentDirectory();
-            jsonPath = jsonPath + "ExcelRootPath.txt";
+            jsonPath = jsonPath + @"\ExcelRootPath.txt";
             using (FileStream SourceStream = File.Open(jsonPath, FileMode.Create))
             {
                 SourceStream.Seek(0, SeekOrigin.End);
