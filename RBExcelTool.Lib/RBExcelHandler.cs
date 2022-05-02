@@ -38,10 +38,12 @@ namespace RBExcelTool.Lib
         }
         public void Process()
         {
+            ConsoleColor ConsoleNormalColor = Console.ForegroundColor;
             Stopwatch st = new Stopwatch();
             st.Start();
             if (!Directory.Exists(mExcelPath))
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("该路径【{0}】不存在，请重新指定 Excle 路径", mExcelPath);
                 return;
             }
@@ -53,8 +55,8 @@ namespace RBExcelTool.Lib
                 st.Stop();
                 TimeSpan ts = st.Elapsed;
                 string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
-                ts.Hours, ts.Minutes, ts.Seconds,
-                ts.Milliseconds / 10);
+                ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
+                Console.ForegroundColor = ConsoleNormalColor;
                 Console.WriteLine("共用时【{0}】", elapsedTime);
                 Console.WriteLine("【{0}】 所在的 Excel =【{1}】\n按回车键打开,按 ESC 键退出", mSheetName, _ExcelData.mExcelName);
                 while (true)
@@ -62,7 +64,35 @@ namespace RBExcelTool.Lib
                     var cki = Console.ReadKey(true);
                     if (cki.Key == ConsoleKey.Enter)
                     {
-                        System.Diagnostics.Process.Start(_ExcelData.mExcelPath);
+                        try
+                        {
+                            System.Diagnostics.Process.Start(_ExcelData.mExcelPath);
+                        }
+                        catch (System.ComponentModel.Win32Exception ex)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine(ex.Message);
+                            Console.WriteLine("被打开的 Excel = 【{0}】", _ExcelData.mExcelPath);
+                            Console.WriteLine("该 Excel 或被删除 或已被移动到其他文件夹内 按 回车键 重新查找 按 ESC 键退出");
+                            while (true)
+                            {
+                                var _cki = Console.ReadKey(true);
+                                if (_cki.Key == ConsoleKey.Enter)
+                                {
+                                    st = new Stopwatch();
+                                    st.Start();
+                                    goto A;
+                                }
+                                else if (cki.Key == ConsoleKey.Escape)
+                                {
+                                    break;
+                                }
+                                else
+                                {
+                                    Thread.Sleep(1);
+                                }
+                            }
+                        }
                         break;
                     }
                     else if (cki.Key == ConsoleKey.Escape)
@@ -77,16 +107,18 @@ namespace RBExcelTool.Lib
                 return;
             }
 
-            int ExcelCount = 0;
+        A: int ExcelCount = 0;
+            Console.ForegroundColor = ConsoleNormalColor;
+            mExcelDictionary.Clear();
             string[] files = Directory.GetFiles(mExcelPath, "*.xlsx", SearchOption.AllDirectories);
             for (int i = 0; i < files.Length; i++)
             {
-                ExcelCount = i;
                 var path = files[i];
                 if (path.Contains("~$"))
                 {
                     continue;
                 }
+                ExcelCount = i;
                 Console.WriteLine(path);
 
                 ProcessExcel(path);
@@ -97,8 +129,7 @@ namespace RBExcelTool.Lib
                 st.Stop();
                 TimeSpan ts = st.Elapsed;
                 string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
-                ts.Hours, ts.Minutes, ts.Seconds,
-                ts.Milliseconds / 10);
+                ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
                 Console.WriteLine("共用时【{0}】", elapsedTime);
                 Console.WriteLine("【{0}】 所在的 Excel =【{1}】\n按回车键打开,按下 ESC 键退出", mSheetName, _ExcelData.mExcelName);
                 while (true)
@@ -106,7 +137,25 @@ namespace RBExcelTool.Lib
                     var cki = Console.ReadKey(true);
                     if (cki.Key == ConsoleKey.Enter)
                     {
-                        System.Diagnostics.Process.Start(_ExcelData.mExcelPath);
+                        try
+                        {
+                            System.Diagnostics.Process.Start(_ExcelData.mExcelPath);
+                        }
+                        catch (System.ComponentModel.Win32Exception e)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("Caught: {0}", e.Message);
+                        }
+                        catch (ObjectDisposedException e)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("Caught: {0}", e.Message);
+                        }
+                        catch(PlatformNotSupportedException e)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("Caught: {0}", e.Message);
+                        }
                         break;
                     }
                     else if (cki.Key == ConsoleKey.Escape)
@@ -121,12 +170,15 @@ namespace RBExcelTool.Lib
             }
             else
             {
-                Console.WriteLine("未找到 {0}", mSheetName);
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("未找到 【{0}】", mSheetName);
                 st.Stop();
                 TimeSpan ts = st.Elapsed;
                 string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
+                Console.ForegroundColor = ConsoleNormalColor;
                 Console.WriteLine("共用时【{0}】", elapsedTime);
             }
+            Console.ForegroundColor = ConsoleNormalColor;
             Console.WriteLine("共有【{0}】个 Excel 文件", ExcelCount);
             _ = WriteJson();
         }
