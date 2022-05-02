@@ -33,7 +33,7 @@ namespace RBExcelTool.Lib
             //var path = path3 + @"\SVN";
             //mExcelPath = path;
             mExcelPath = _ExcelRootPath;
-            _ = WriteJsonPath();
+            _ = WriteJsonPathAsync();
             mExcelDictionary = new Dictionary<string, ExcelData>();
         }
         public void Process()
@@ -180,7 +180,7 @@ namespace RBExcelTool.Lib
             }
             Console.ForegroundColor = ConsoleNormalColor;
             Console.WriteLine("共有【{0}】个 Excel 文件", ExcelCount);
-            _ = WriteJson();
+            _ = WriteJsonAsync();
         }
         bool ProcessExcel(string path)
         {
@@ -224,7 +224,7 @@ namespace RBExcelTool.Lib
             return false;
         }
 
-        async Task WriteJson()
+        async Task WriteJsonAsync()
         {
             byte[] info = new UTF8Encoding(true).GetBytes(Newtonsoft.Json.JsonConvert.SerializeObject(mExcelDictionary));
             string jsonPath = mExcelPath + "Excel.json";
@@ -236,7 +236,7 @@ namespace RBExcelTool.Lib
         }
         void ResdJson()
         {
-            string jsonPath = mExcelPath + @"\Excel.json";
+            string jsonPath = mExcelPath + "Excel.json";
             if (File.Exists(jsonPath))
             {
                 using (StreamReader file = File.OpenText(jsonPath))
@@ -250,7 +250,7 @@ namespace RBExcelTool.Lib
                 }
             }
         }
-        async Task WriteJsonPath()
+        async Task WriteJsonPathAsync()
         {
             byte[] info = new UTF8Encoding(true).GetBytes(mExcelPath);
             string jsonPath = System.IO.Directory.GetCurrentDirectory();

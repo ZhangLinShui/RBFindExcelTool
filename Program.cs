@@ -48,12 +48,24 @@ namespace RBFindExcelTool
             }
 
         B: Console.WriteLine("需要查找的 Excel 所在根目录 = 【{0}】", _ExcelRootPath);
+            Console.WriteLine("如需更换 Excel 根目录 请按 回车键 继续请安 ESC");
+            while (true)
+            {
+                var cki = Console.ReadKey(true);
+                if (cki.Key == ConsoleKey.Enter)
+                {
+                    goto A;
+                }
+                else if (cki.Key == ConsoleKey.Escape)
+                {
+                    break;
+                }
+            }
 
         D: Console.WriteLine("请输入需要查找的 SheetName");
             string _SheetName = Console.ReadLine();
             Console.WriteLine("需要查找的 SheetName = 【{0}】", _SheetName);
-            if (_SheetName.Contains("\n") || string.IsNullOrEmpty(_SheetName)|| _SheetName.Contains(" ")|| _SheetName.Contains("\r")||
-                _SheetName.Contains("\r\n"))
+            if (_SheetName.Contains("\n") || string.IsNullOrEmpty(_SheetName)|| _SheetName.Contains(" ")|| _SheetName.Contains("\r"))
             {
                 Console.WriteLine("输入 SheetName 非法 请重新输入");
                 goto D;
