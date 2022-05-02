@@ -58,7 +58,7 @@ namespace RBExcelTool.Lib
                 ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
                 Console.ForegroundColor = ConsoleNormalColor;
                 Console.WriteLine("共用时【{0}】", elapsedTime);
-                Console.WriteLine("【{0}】 所在的 Excel =【{1}】\n按回车键打开,按 ESC 键退出", mSheetName, _ExcelData.mExcelName);
+                Console.WriteLine("【{0}】 所在的 Excel =【{1}】\n按回车键打开,按 ESC 键取消", mSheetName, _ExcelData.mExcelName);
                 while (true)
                 {
                     var cki = Console.ReadKey(true);
@@ -73,7 +73,7 @@ namespace RBExcelTool.Lib
                             Console.ForegroundColor = ConsoleColor.Red;
                             Console.WriteLine(ex.Message);
                             Console.WriteLine("被打开的 Excel = 【{0}】", _ExcelData.mExcelPath);
-                            Console.WriteLine("该 Excel 或被删除 或已被移动到其他文件夹内 按 回车键 重新查找 按 ESC 键退出");
+                            Console.WriteLine("该 Excel 或被删除 或已被移动到其他文件夹内 按 回车键 重新查找 按 ESC 键取消");
                             while (true)
                             {
                                 var _cki = Console.ReadKey(true);
@@ -131,7 +131,7 @@ namespace RBExcelTool.Lib
                 string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
                 ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
                 Console.WriteLine("共用时【{0}】", elapsedTime);
-                Console.WriteLine("【{0}】 所在的 Excel =【{1}】\n按回车键打开,按下 ESC 键退出", mSheetName, _ExcelData.mExcelName);
+                Console.WriteLine("【{0}】 所在的 Excel =【{1}】\n按回车键打开,按下 ESC 键取消", mSheetName, _ExcelData.mExcelName);
                 while (true)
                 {
                     var cki = Console.ReadKey(true);

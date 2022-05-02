@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Text;
+using System.Threading;
 
 namespace RBFindExcelTool
 {
@@ -60,6 +61,10 @@ namespace RBFindExcelTool
                 {
                     break;
                 }
+                else
+                {
+                    Thread.Sleep(1);
+                }
             }
 
         D: Console.WriteLine("请输入需要查找的 SheetName");
@@ -75,7 +80,24 @@ namespace RBFindExcelTool
             Manager.Exprot(_ExcelRootPath, _SheetName);
             Console.WriteLine("结束查找Excel");
 
-            Console.ReadKey();
+            Console.Clear();
+            Console.WriteLine("如需继续查找 请按 回车键 退出请安 ESC 键");
+            while (true)
+            {
+                var cki = Console.ReadKey(true);
+                if (cki.Key == ConsoleKey.Enter)
+                {
+                    goto B;
+                }
+                else if (cki.Key == ConsoleKey.Escape)
+                {
+                    break;
+                }
+                else
+                {
+                    Thread.Sleep(1);
+                }
+            }
         }
         static bool ChackPath(string _ExcelRootPath)
         {
