@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RBFindExcelTool", "RBFindExcelTool.csproj", "{CF402A83-C536-49C8-A31B-C82C06DE8FB8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RBExcelTool.Lib", "RBExcelTool.Lib\RBExcelTool.Lib.csproj", "{91832116-7577-47E1-A770-C95695D260FC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CF402A83-C536-49C8-A31B-C82C06DE8FB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF402A83-C536-49C8-A31B-C82C06DE8FB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF402A83-C536-49C8-A31B-C82C06DE8FB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF402A83-C536-49C8-A31B-C82C06DE8FB8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91832116-7577-47E1-A770-C95695D260FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91832116-7577-47E1-A770-C95695D260FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91832116-7577-47E1-A770-C95695D260FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91832116-7577-47E1-A770-C95695D260FC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {50B5A84E-56C1-4209-9F97-0C4C9FE8425B}
+	EndGlobalSection
+EndGlobal
