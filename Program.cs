@@ -55,6 +55,8 @@ namespace RBFindExcelTool
             Console.WriteLine("开始查找Excel");
             Manager.Exprot(_ExcelRootPath, _SheetName);
             Console.WriteLine("结束查找Excel");
+
+            Console.ReadKey();
         }
         static bool ChackPath(string _ExcelRootPath)
         {
