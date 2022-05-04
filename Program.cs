@@ -49,7 +49,7 @@ namespace RBFindExcelTool
             }
 
         B: Console.WriteLine("需要查找的 Excel 所在根目录 = 【{0}】", _ExcelRootPath);
-            Console.WriteLine("如需更换 Excel 根目录 请按 回车键 继续请安 ESC");
+            Console.WriteLine("如需更换 Excel 根目录 请按 回车键 继续请按 ESC");
             while (true)
             {
                 var cki = Console.ReadKey(true);
@@ -74,6 +74,23 @@ namespace RBFindExcelTool
             {
                 Console.WriteLine("输入 SheetName 非法 请重新输入");
                 goto D;
+            }
+            Console.WriteLine("如需更换 SheetName 请按 回车键 继续请按 ESC");
+            while (true)
+            {
+                var cki = Console.ReadKey(true);
+                if (cki.Key == ConsoleKey.Enter)
+                {
+                    goto D;
+                }
+                else if (cki.Key == ConsoleKey.Escape)
+                {
+                    break;
+                }
+                else
+                {
+                    Thread.Sleep(1);
+                }
             }
 
             Console.WriteLine("开始查找Excel");
