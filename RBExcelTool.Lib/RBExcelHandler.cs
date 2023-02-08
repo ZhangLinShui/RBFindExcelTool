@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 //using System.Text.Json;
@@ -17,6 +18,7 @@ namespace RBExcelTool.Lib
         public string mExcelPath;
         public string mSheetName;
         public string mExcelName;
+        public int mActiveTab;
     }
     internal class RBExcelHandler
     {
@@ -66,14 +68,15 @@ namespace RBExcelTool.Lib
                     {
                         try
                         {
-                            System.Diagnostics.Process.Start(_ExcelData.mExcelPath);
+                            //System.Diagnostics.Process.Start(_ExcelData.mExcelPath);
+                            OpenExcel(_ExcelData);
                         }
                         catch (System.ComponentModel.Win32Exception ex)
                         {
                             Console.ForegroundColor = ConsoleColor.Red;
                             Console.WriteLine(ex.Message);
                             Console.WriteLine("被打开的 Excel = 【{0}】", _ExcelData.mExcelPath);
-                            Console.WriteLine("该 Excel 或被删除 或已被移动到其他文件夹内 按 回车键 重新查找 按 ESC 键取消");
+                            Console.WriteLine("该 Excel 或被删除 或已被移动到其他文件夹内 按 回车键 重新查找 按 其他键 取消");
                             while (true)
                             {
                                 var _cki = Console.ReadKey(true);
@@ -83,7 +86,7 @@ namespace RBExcelTool.Lib
                                     st.Start();
                                     goto A;
                                 }
-                                else if (cki.Key == ConsoleKey.Escape)
+                                else if (cki.Key != ConsoleKey.Enter)
                                 {
                                     break;
                                 }
@@ -110,7 +113,11 @@ namespace RBExcelTool.Lib
         A: int ExcelCount = 0;
             Console.ForegroundColor = ConsoleNormalColor;
             mExcelDictionary.Clear();
-            string[] files = Directory.GetFiles(mExcelPath, "*.xlsx", SearchOption.AllDirectories);
+            //string[] files = Directory.GetFiles(mExcelPath, "*.xlsx", SearchOption.AllDirectories);
+            //string[] files = Directory.GetFiles(mExcelPath, "*.*", SearchOption.AllDirectories).Where(file => file.ToLower().EndsWith("xlsx") || file.ToLower().EndsWith("xlsm")|| file.ToLower().EndsWith("xls")).ToArray();
+            //string[] files = Directory.GetFiles(mExcelPath, "(*.xlsx|*.xlsm)");
+
+            var files = Directory.GetFiles(mExcelPath).Where(f => Manager.searchPattern.IsMatch(f)).ToArray();
             for (int i = 0; i < files.Length; i++)
             {
                 var path = files[i];
@@ -121,7 +128,10 @@ namespace RBExcelTool.Lib
                 ExcelCount = i;
                 Console.WriteLine(path);
 
-                ProcessExcel(path);
+                if (ProcessExcel(path) == false)
+                {
+                    return;
+                }
             }
 
             if (mExcelDictionary.TryGetValue(mSheetName, out _ExcelData))
@@ -131,7 +141,7 @@ namespace RBExcelTool.Lib
                 string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
                 ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
                 Console.WriteLine("共用时【{0}】", elapsedTime);
-                Console.WriteLine("【{0}】 所在的 Excel =【{1}】\n按回车键打开,按下 ESC 键取消", mSheetName, _ExcelData.mExcelName);
+                Console.WriteLine("【{0}】 所在的 Excel =【{1}】\n按回车键打开,按下 其他键 取消", mSheetName, _ExcelData.mExcelName);
                 while (true)
                 {
                     var cki = Console.ReadKey(true);
@@ -139,7 +149,8 @@ namespace RBExcelTool.Lib
                     {
                         try
                         {
-                            System.Diagnostics.Process.Start(_ExcelData.mExcelPath);
+                            //System.Diagnostics.Process.Start(_ExcelData.mExcelPath);
+                            OpenExcel(_ExcelData);
                         }
                         catch (System.ComponentModel.Win32Exception e)
                         {
@@ -158,7 +169,7 @@ namespace RBExcelTool.Lib
                         }
                         break;
                     }
-                    else if (cki.Key == ConsoleKey.Escape)
+                    else if (cki.Key != ConsoleKey.Enter)
                     {
                         break;
                     }
@@ -203,6 +214,7 @@ namespace RBExcelTool.Lib
                                 mExcelPath = path,
                                 mExcelName = _ExcelName,
                                 mSheetName = sheetName,
+                                mActiveTab = i,
                             };
                             mExcelDictionary.Add(sheetName, _ExcelData);
                         }
@@ -213,17 +225,28 @@ namespace RBExcelTool.Lib
                                 mExcelPath = path,
                                 mExcelName = _ExcelName,
                                 mSheetName = sheetName,
+                                mActiveTab = i,
                             };
                             mSameSheetName2 = ExcelData;
+                            Console.WriteLine($"\n          以下两个excel 的sheet重名了\n\n{path}=====>{sheetName}\n{ExcelData.mExcelPath}=====>{ExcelData.mSheetName}\n\n          重名结束-----\n");
                             //这里应当 结束 所有正在执行的异步方法
-                            //return;
+                            return false;
                         }
                     }
                 }
             }
-            return false;
+            return true;
         }
-
+        void OpenExcel(ExcelData ExcelData)
+        {
+            Console.WriteLine($"path = {0}, mActiveTab = {1}",ExcelData.mExcelPath, ExcelData.mActiveTab);
+            System.Diagnostics.Process.Start(ExcelData.mExcelPath);
+            var fileInfo = new FileInfo(ExcelData.mExcelPath);
+            using (ExcelPackage excelPackage = new ExcelPackage(fileInfo))
+            {
+                excelPackage.Workbook.View.ActiveTab = ExcelData.mActiveTab;
+            }
+        }
         async Task WriteJsonAsync()
         {
             byte[] info = new UTF8Encoding(true).GetBytes(Newtonsoft.Json.JsonConvert.SerializeObject(mExcelDictionary));
